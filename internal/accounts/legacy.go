@@ -51,7 +51,7 @@ func ImportJSONFile(path string) ([]Account, error) {
 			Disabled:    boolField(fields, "disabled"),
 			InvalidAt:   floatField(fields, "invalid_at"),
 		}
-		if account.Status == "禁用" {
+		if account.Status == "disabled" {
 			account.Disabled = true
 		}
 		if account.AccessToken != "" {
@@ -90,7 +90,7 @@ func boolField(fields map[string]any, key string) bool {
 	case bool:
 		return typed
 	case string:
-		return typed == "1" || typed == "true" || typed == "是"
+		return typed == "1" || typed == "true" || typed == "yes"
 	default:
 		return false
 	}

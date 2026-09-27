@@ -320,7 +320,7 @@ func (s *Service) postFilesCreateOnce(token, proxy string, meta ImageUploadReque
 		"file_name":                       meta.FileName,
 		"file_size":                       meta.FileSize,
 		"use_case":                        "multimodal",
-		"timezone_offset_min":             -480,
+		"timezone_offset_min":             -330,
 		"reset_rate_limits":               false,
 		"supports_direct_azure_multipart": true,
 		"mime_type":                       meta.MimeType,

@@ -65,7 +65,7 @@ func TestPickByIDUsesStickyAccount(t *testing.T) {
 	if token != "token-b" || account.ID != second.ID {
 		t.Fatalf("expected sticky second account, got token=%q account=%+v", token, account)
 	}
-	if _, err := pool.Update(first.ID, AccountUpdate{Email: first.Email, Disabled: true, Status: "禁用"}); err != nil {
+	if _, err := pool.Update(first.ID, AccountUpdate{Email: first.Email, Disabled: true, Status: "disabled"}); err != nil {
 		t.Fatal(err)
 	}
 	if _, _, err := pool.PickByID(first.ID, nil); err == nil {
@@ -79,9 +79,9 @@ func TestPickByIDUsesStickyAccount(t *testing.T) {
 func TestPickSkipsDisabledAndRotatesAccounts(t *testing.T) {
 	pool := newTestPool(t)
 	for _, account := range []Account{
-		{Email: "a@x.com", AccessToken: "t1", Status: "禁用"},
-		{Email: "b@x.com", AccessToken: "t2", Status: "正常"},
-		{Email: "c@x.com", AccessToken: "t3", Status: "正常"},
+		{Email: "a@x.com", AccessToken: "t1", Status: "disabled"},
+		{Email: "b@x.com", AccessToken: "t2", Status: "active"},
+		{Email: "c@x.com", AccessToken: "t3", Status: "active"},
 	} {
 		if err := pool.Upsert(account); err != nil {
 			t.Fatal(err)
@@ -135,7 +135,7 @@ func TestMarkInvalidPersists(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(items) != 1 || !items[0].Disabled || items[0].Status != "禁用" || items[0].InvalidAt == 0 {
+	if len(items) != 1 || !items[0].Disabled || items[0].Status != "disabled" || items[0].InvalidAt == 0 {
 		t.Fatalf("invalid persisted state: %+v", items)
 	}
 }
@@ -182,14 +182,14 @@ func TestSealStoredTokensMigratesLegacyPlaintext(t *testing.T) {
 			email TEXT NOT NULL DEFAULT '',
 			access_token TEXT NOT NULL UNIQUE,
 			proxy TEXT NOT NULL DEFAULT '',
-			status TEXT NOT NULL DEFAULT '正常',
+			status TEXT NOT NULL DEFAULT 'active',
 			disabled INTEGER NOT NULL DEFAULT 0,
 			invalid_at REAL NOT NULL DEFAULT 0,
 			last_used_at TEXT,
 			created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 		);
-		INSERT INTO accounts (email, access_token, status) VALUES ('a@x.com', 'legacy-plain-token', '正常');
+		INSERT INTO accounts (email, access_token, status) VALUES ('a@x.com', 'legacy-plain-token', 'active');
 	`); err != nil {
 		_ = conn.Close()
 		t.Fatal(err)
@@ -236,8 +236,8 @@ func TestImportLegacyJSON(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "accounts.json")
 	content := `{
 		"accounts": [
-			{"email":"a@x.com","access_token":"t1","status":"正常"},
-			{"email":"disabled@x.com","token":"t2","status":"禁用","invalid_at":123.5}
+			{"email":"a@x.com","access_token":"t1","status":"active"},
+			{"email":"disabled@x.com","token":"t2","status":"disabled","invalid_at":123.5}
 		]
 	}`
 	if err := os.WriteFile(path, []byte(content), 0o600); err != nil {
@@ -280,13 +280,13 @@ func TestAccountCRUDAndStats(t *testing.T) {
 		Email:       "updated@example.com",
 		AccessToken: nil,
 		Proxy:       stringPointer(""),
-		Status:      "禁用",
+		Status:      "disabled",
 		Disabled:    true,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if updated.AccessToken != created.AccessToken || updated.Proxy != "" || !updated.Disabled || updated.Status != "禁用" {
+	if updated.AccessToken != created.AccessToken || updated.Proxy != "" || !updated.Disabled || updated.Status != "disabled" {
 		t.Fatalf("unexpected disabled update: %+v", updated)
 	}
 	stats, err = pool.Stats()
@@ -301,13 +301,13 @@ func TestAccountCRUDAndStats(t *testing.T) {
 	updated, err = pool.Update(created.ID, AccountUpdate{
 		Email:       updated.Email,
 		AccessToken: &replacement,
-		Status:      "正常",
+		Status:      "active",
 		Disabled:    false,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if updated.AccessToken != replacement || updated.Disabled || updated.Status != "正常" || updated.InvalidAt != 0 {
+	if updated.AccessToken != replacement || updated.Disabled || updated.Status != "active" || updated.InvalidAt != 0 {
 		t.Fatalf("unexpected enabled update: %+v", updated)
 	}
 

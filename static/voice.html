@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -1439,7 +1439,7 @@
         </div>
         <div id="toast" class="header-toast" role="status" aria-live="polite"></div>
         <div class="header-actions">
-          <button type="button" id="btnUiLocale" class="header-chip" data-i18n-title="interfaceLanguage" data-i18n-aria="interfaceLanguage" title="界面语言" aria-label="界面语言">中文</button>
+          <button type="button" id="btnUiLocale" class="header-chip" data-i18n-title="interfaceLanguage" data-i18n-aria="interfaceLanguage" title="Language" aria-label="Language" style="display:none">EN</button>
           <button type="button" id="btnUiTheme" class="header-chip" data-i18n-title="interfaceTheme" data-i18n-aria="interfaceTheme" title="界面主题" aria-label="界面主题">深色</button>
           <button type="button" id="btnSettings" class="icon-button" data-i18n-title="openSettings" data-i18n-aria="openSettings" title="打开设置" aria-label="打开设置">⚙</button>
         </div>
@@ -1774,9 +1774,9 @@
   var micPermissionWarmed = false;
 
 
-  var uiLocaleStorageKey = 'chatgpt_web_voice_ui_locale_v1';
+  var uiLocaleStorageKey = 'chatgpt_web_voice_ui_locale_v2';
   var uiThemeStorageKey = 'chatgpt_web_voice_theme_v1';
-  var uiLocale = 'zh';
+  var uiLocale = 'en';
   var uiTheme = 'dark';
   var lastUiState = { state: 'idle', titleKey: 'statusReady', subKey: 'subReady', title: '', sub: '', titleVars: null, subVars: null };
 

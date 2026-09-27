@@ -251,7 +251,7 @@ func TestProbeAccountTokenAlive(t *testing.T) {
 
 	pool := testPool(t)
 	token := testJWT(map[string]any{"exp": time.Now().Add(2 * time.Hour).Unix()})
-	account, err := pool.Create(accounts.Account{AccessToken: token, Status: "正常"})
+	account, err := pool.Create(accounts.Account{AccessToken: token, Status: "active"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -284,7 +284,7 @@ func TestProbeAccountTokenUnauthorizedMarksInvalid(t *testing.T) {
 
 	pool := testPool(t)
 	token := testJWT(map[string]any{"exp": time.Now().Add(2 * time.Hour).Unix()})
-	account, err := pool.Create(accounts.Account{AccessToken: token, Status: "正常"})
+	account, err := pool.Create(accounts.Account{AccessToken: token, Status: "active"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -302,7 +302,7 @@ func TestProbeAccountTokenUnauthorizedMarksInvalid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !stored.Disabled || stored.Status != "禁用" {
+	if !stored.Disabled || stored.Status != "disabled" {
 		t.Fatalf("expected disabled account: %+v", stored)
 	}
 }
@@ -317,7 +317,7 @@ func TestProbeAccountTokenHTMLChallengeIsUnknown(t *testing.T) {
 
 	pool := testPool(t)
 	token := testJWT(map[string]any{"exp": time.Now().Add(2 * time.Hour).Unix()})
-	account, err := pool.Create(accounts.Account{AccessToken: token, Status: "正常"})
+	account, err := pool.Create(accounts.Account{AccessToken: token, Status: "active"})
 	if err != nil {
 		t.Fatal(err)
 	}

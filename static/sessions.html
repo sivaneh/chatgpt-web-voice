@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>会话记录 · Voice Gateway</title>
+  <title>Sessions · Voice Gateway</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2310a37f'/%3E%3Cpath d='M16 34h8l4-14 8 27 5-18h7' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,58 +45,58 @@
   <header class="topbar">
     <a class="brand" href="/voice">
       <span class="brand-mark">SS</span>
-      <span class="brand-title">会话记录</span>
+      <span class="brand-title">Sessions</span>
     </a>
     <div class="top-actions">
-      <button type="button" class="header-chip" id="themeButton" title="主题">主题</button>
-      <a class="nav-link" href="/accounts">账号池</a>
-      <a class="nav-link" href="/keys">API 密钥</a>
-      <a class="nav-link active" href="/sessions" aria-current="page">会话记录</a>
-      <a class="nav-link" href="/voice">语音通话</a>
-      <button type="button" class="nav-link" id="logoutButton">退出</button>
+      <button type="button" class="header-chip" id="themeButton" title="Theme">Theme</button>
+      <a class="nav-link" href="/accounts">Accounts</a>
+      <a class="nav-link" href="/keys">API Keys</a>
+      <a class="nav-link active" href="/sessions" aria-current="page">Sessions</a>
+      <a class="nav-link" href="/voice">Voice</a>
+      <button type="button" class="nav-link" id="logoutButton">Log out</button>
     </div>
   </header>
 
   <main class="layout">
     <div class="page-head">
       <div>
-        <h1>语音会话记录</h1>
-        <p class="page-sub">只记录网关侧元数据：会话 id、调用方、粘性账号邮箱、上游会话 id、创建/结束时间。不展示、不保存聊天正文或字幕。</p>
+        <h1>Voice Sessions</h1>
+        <p class="page-sub">Gateway-side metadata only: session id, caller, sticky account email, upstream session id, created/ended times. Chat content and captions are never shown or stored.</p>
       </div>
-      <button type="button" class="btn" id="refreshButton">刷新</button>
+      <button type="button" class="btn" id="refreshButton">Refresh</button>
     </div>
 
     <div class="note">
       <span class="note-mark">META</span>
       <div>
-        <strong>调用方标识</strong>
-        内置语音页 / 管理端记为 <code>admin</code>；下游 Bearer key 记为密钥名称。账号列显示池内粘性账号邮箱。
+        <strong>Caller identity</strong>
+        The built-in voice page / admin sessions are logged as <code>admin</code>; downstream Bearer keys are logged by key name. The account column shows the sticky pool account email.
       </div>
     </div>
 
     <div class="stats">
-      <span class="stat-pill"><strong id="totalCount">0</strong><span>全部</span></span>
-      <span class="stat-pill"><strong id="activeCount">0</strong><span>活跃</span></span>
-      <span class="stat-pill"><strong id="releasedCount">0</strong><span>已释放</span></span>
+      <span class="stat-pill"><strong id="totalCount">0</strong><span>Total</span></span>
+      <span class="stat-pill"><strong id="activeCount">0</strong><span>Active</span></span>
+      <span class="stat-pill"><strong id="releasedCount">0</strong><span>Released</span></span>
       <span class="stat-pill"><strong id="adminCount">0</strong><span>admin</span></span>
-      <span class="stat-pill"><strong id="apiKeyCount">0</strong><span>下游 key</span></span>
+      <span class="stat-pill"><strong id="apiKeyCount">0</strong><span>API keys</span></span>
     </div>
 
     <section class="panel">
       <div class="toolbar">
         <div class="filters">
           <div class="search">
-            <input id="searchInput" type="search" autocomplete="off" placeholder="搜索会话 id / 调用方 / 账号邮箱…" />
+            <input id="searchInput" type="search" autocomplete="off" placeholder="Search session id / caller / account email…" />
           </div>
-          <select id="callerFilter" aria-label="调用方">
-            <option value="all">全部来源</option>
+          <select id="callerFilter" aria-label="Caller">
+            <option value="all">All sources</option>
             <option value="admin">admin</option>
-            <option value="api_key">下游 key</option>
+            <option value="api_key">API key</option>
           </select>
-          <select id="statusFilter" aria-label="状态">
-            <option value="all">全部状态</option>
-            <option value="active">活跃</option>
-            <option value="released">已释放</option>
+          <select id="statusFilter" aria-label="Status">
+            <option value="all">All statuses</option>
+            <option value="active">Active</option>
+            <option value="released">Released</option>
           </select>
         </div>
       </div>
@@ -104,22 +104,22 @@
         <table class="sessions-table">
           <thead>
             <tr>
-              <th class="col-id">记录 ID</th>
-              <th class="col-caller">调用方</th>
-              <th class="col-status">状态</th>
-              <th class="col-account">账号</th>
-              <th class="col-upstream">上游会话</th>
-              <th class="col-voice">语音参数</th>
-              <th class="col-time">时间</th>
-              <th class="col-actions">操作</th>
+              <th class="col-id">Record ID</th>
+              <th class="col-caller">Caller</th>
+              <th class="col-status">Status</th>
+              <th class="col-account">Account</th>
+              <th class="col-upstream">Upstream</th>
+              <th class="col-voice">Voice</th>
+              <th class="col-time">Time</th>
+              <th class="col-actions">Actions</th>
             </tr>
           </thead>
           <tbody id="sessionRows"></tbody>
         </table>
       </div>
       <div class="empty" id="emptyState">
-        <strong id="emptyTitle">暂无会话记录</strong>
-        <span id="emptyText">成功建立语音 SDP 后会出现在这里。</span>
+        <strong id="emptyTitle">No sessions yet</strong>
+        <span id="emptyText">Sessions appear here after a voice SDP is established.</span>
       </div>
     </section>
   </main>
@@ -160,7 +160,7 @@
         var raw = String(value);
         var date = new Date(raw.indexOf('T') >= 0 ? raw : raw.replace(' ', 'T') + 'Z');
         if (Number.isNaN(date.getTime())) return raw;
-        return new Intl.DateTimeFormat('zh-CN', {
+        return new Intl.DateTimeFormat('en-IN', {
           month: '2-digit',
           day: '2-digit',
           hour: '2-digit',
@@ -199,7 +199,7 @@
         try { data = await response.json(); } catch (e) {}
         if (response.status === 401) {
           window.location.replace('/login');
-          throw new Error('登录已过期');
+          throw new Error('Login expired');
         }
         if (!response.ok) {
           var message = data && data.detail && data.detail.error;
@@ -214,7 +214,7 @@
           ? 'admin'
           : (item.caller_label || item.api_key_name || ('key#' + (item.api_key_id || '—')));
         var statusClass = item.status === 'released' ? 'released' : '';
-        var statusText = item.status === 'released' ? '已释放' : '活跃';
+        var statusText = item.status === 'released' ? 'Released' : 'Active';
         var voice = item.voice || '—';
         var mode = item.voice_mode || '—';
         var lang = item.language_code || '—';
@@ -223,34 +223,34 @@
         var vsID = item.voice_session_id || '';
         var upstreamID = item.upstream_conversation_id || item.upstream_voice_session_id || '';
         var endedAt = item.released_at || '';
-        var endText = endedAt ? formatDate(endedAt) : (item.status === 'released' ? '—' : '进行中');
+        var endText = endedAt ? formatDate(endedAt) : (item.status === 'released' ? '—' : 'In progress');
 
         return '<tr data-id="' + escapeHTML(vsID) + '">' +
-          '<td data-label="记录 ID">' +
+          '<td data-label="Record ID">' +
             '<span class="id-chip mono" title="' + escapeHTML(vsID) + '">' + escapeHTML(shortID(vsID, 12, 6)) + '</span>' +
           '</td>' +
-          '<td data-label="调用方">' +
+          '<td data-label="Caller">' +
             '<span class="caller-text" title="' + escapeHTML(callerText) + '">' + escapeHTML(callerText) + '</span>' +
           '</td>' +
-          '<td data-label="状态"><span class="badge ' + statusClass + '">' + escapeHTML(statusText) + '</span></td>' +
-          '<td data-label="账号">' +
+          '<td data-label="Status"><span class="badge ' + statusClass + '">' + escapeHTML(statusText) + '</span></td>' +
+          '<td data-label="Account">' +
             '<span class="account-text" title="' + escapeHTML(accountText) + '">' + escapeHTML(accountText) + '</span>' +
           '</td>' +
-          '<td data-label="上游会话">' +
+          '<td data-label="Upstream">' +
             '<span class="id-chip mono" title="' + escapeHTML(upstreamID || '—') + '">' + escapeHTML(shortID(upstreamID, 10, 6)) + '</span>' +
           '</td>' +
-          '<td data-label="语音参数"><div class="param-list">' +
+          '<td data-label="Voice"><div class="param-list">' +
             '<span><strong>' + escapeHTML(voice) + '</strong></span>' +
             '<span>' + escapeHTML(mode) + '</span>' +
             '<span>' + escapeHTML(lang) + '</span>' +
           '</div></td>' +
-          '<td data-label="时间"><div class="time-list">' +
-            '<span class="time-k" title="创建时间">创建</span><span class="time-v">' + escapeHTML(formatDate(item.created_at)) + '</span>' +
-            '<span class="time-k" title="结束时间">结束</span><span class="time-v">' + escapeHTML(endText) + '</span>' +
+          '<td data-label="Time"><div class="time-list">' +
+            '<span class="time-k" title="Created at">Created</span><span class="time-v">' + escapeHTML(formatDate(item.created_at)) + '</span>' +
+            '<span class="time-k" title="Ended at">Ended</span><span class="time-v">' + escapeHTML(endText) + '</span>' +
           '</div></td>' +
-          '<td data-label="操作"><div class="actions">' +
-            '<button type="button" class="btn btn-small" data-action="copy" data-id="' + escapeHTML(vsID) + '">复制</button>' +
-            '<button type="button" class="btn btn-small btn-danger" data-action="delete" data-id="' + escapeHTML(vsID) + '">删除</button>' +
+          '<td data-label="Actions"><div class="actions">' +
+            '<button type="button" class="btn btn-small" data-action="copy" data-id="' + escapeHTML(vsID) + '">Copy</button>' +
+            '<button type="button" class="btn btn-small btn-danger" data-action="delete" data-id="' + escapeHTML(vsID) + '">Delete</button>' +
           '</div></td></tr>';
       }
 
@@ -263,8 +263,8 @@
         rows.innerHTML = sessions.map(renderRow).join('');
         tableWrap.style.display = sessions.length ? 'block' : 'none';
         emptyState.classList.toggle('show', !sessions.length);
-        document.getElementById('emptyTitle').textContent = '暂无会话记录';
-        document.getElementById('emptyText').textContent = '成功建立语音 SDP 后会出现在这里。';
+        document.getElementById('emptyTitle').textContent = 'No sessions yet';
+        document.getElementById('emptyText').textContent = 'Sessions appear here after a voice SDP is established.';
       }
 
       async function loadSessions(showMessage) {
@@ -279,9 +279,9 @@
           sessions = Array.isArray(data.sessions) ? data.sessions : [];
           stats = data.stats || stats;
           render();
-          if (showMessage) showToast('已刷新');
+          if (showMessage) showToast('Refreshed');
         } catch (error) {
-          showToast('加载失败: ' + error.message);
+          showToast('Load failed: ' + error.message);
         }
       }
 
@@ -297,9 +297,9 @@
             document.execCommand('copy');
             document.body.removeChild(input);
           }
-          showToast('已复制');
+          showToast('Copied');
         } catch (e) {
-          showToast('复制失败');
+          showToast('Copy failed');
         }
       }
 
@@ -323,13 +323,13 @@
           return;
         }
         if (action === 'delete') {
-          if (!window.confirm('删除这条元数据记录？不会中断已建立的 WebRTC，也不会删除本地聊天历史。')) return;
+          if (!window.confirm('Delete this metadata record? It will not interrupt an established WebRTC call or delete local chat history.')) return;
           try {
             await apiFetch('/api/call-sessions/' + encodeURIComponent(id), { method: 'DELETE' });
-            showToast('已删除');
+            showToast('Deleted');
             await loadSessions(false);
           } catch (error) {
-            showToast('删除失败: ' + error.message);
+            showToast('Delete failed: ' + error.message);
           }
         }
       });
@@ -345,10 +345,10 @@
         var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
         try { localStorage.setItem('chatgpt_web_voice_theme_v1', next); } catch (e) {}
-        document.getElementById('themeButton').textContent = next === 'dark' ? '深色' : '浅色';
+        document.getElementById('themeButton').textContent = next === 'dark' ? 'Dark' : 'Light';
       });
       document.getElementById('themeButton').textContent =
-        document.documentElement.getAttribute('data-theme') === 'dark' ? '深色' : '浅色';
+        document.documentElement.getAttribute('data-theme') === 'dark' ? 'Dark' : 'Light';
 
       loadSessions(false);
     })();

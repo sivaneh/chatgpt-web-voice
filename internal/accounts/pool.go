@@ -221,11 +221,11 @@ func (p *Pool) Update(id int64, update AccountUpdate) (Account, error) {
 	}
 	current.Status = strings.TrimSpace(update.Status)
 	if current.Status == "" {
-		current.Status = "正常"
+		current.Status = "active"
 	}
-	current.Disabled = update.Disabled || current.Status == "禁用"
+	current.Disabled = update.Disabled || current.Status == "disabled"
 	if current.Disabled {
-		current.Status = "禁用"
+		current.Status = "disabled"
 	}
 	invalidAt := current.InvalidAt
 	if !current.Disabled {
@@ -270,7 +270,7 @@ func (p *Pool) Stats() (PoolStats, error) {
 	if err := p.db.Conn().QueryRow("SELECT COUNT(*) FROM accounts").Scan(&stats.Total); err != nil {
 		return PoolStats{}, fmt.Errorf("count accounts: %w", err)
 	}
-	if err := p.db.Conn().QueryRow("SELECT COUNT(*) FROM accounts WHERE disabled = 0 AND status <> '禁用'").Scan(&stats.Available); err != nil {
+	if err := p.db.Conn().QueryRow("SELECT COUNT(*) FROM accounts WHERE disabled = 0 AND status <> 'disabled'").Scan(&stats.Available); err != nil {
 		return PoolStats{}, fmt.Errorf("count available accounts: %w", err)
 	}
 	stats.Disabled = stats.Total - stats.Available
@@ -343,7 +343,7 @@ func (p *Pool) PickByID(id int64, excluded map[string]struct{}) (string, Account
 		}
 		return "", Account{}, err
 	}
-	if account.Disabled || account.Status == "禁用" {
+	if account.Disabled || account.Status == "disabled" {
 		return "", Account{}, &Error{Message: "preferred account is unavailable"}
 	}
 	if _, skip := excluded[account.AccessToken]; skip {
@@ -373,13 +373,13 @@ func (p *Pool) Pick(preferredToken string, excluded map[string]struct{}) (string
 	if preferred := strings.TrimSpace(preferredToken); preferred != "" {
 		hash := p.tokenHash(preferred)
 		rows, err = p.db.Conn().Query(
-			"SELECT "+accountSelectColumns+" FROM accounts WHERE token_hash = ? AND disabled = 0 AND status <> '禁用'",
+			"SELECT "+accountSelectColumns+" FROM accounts WHERE token_hash = ? AND disabled = 0 AND status <> 'disabled'",
 			hash,
 		)
 	} else {
 		rows, err = p.db.Conn().Query(
 			"SELECT " + accountSelectColumns + ` FROM accounts
-			WHERE disabled = 0 AND status <> '禁用'
+			WHERE disabled = 0 AND status <> 'disabled'
 			ORDER BY CASE WHEN last_used_at IS NULL THEN 0 ELSE 1 END, last_used_at, id`,
 		)
 	}
@@ -429,7 +429,7 @@ func (p *Pool) MarkInvalid(token string) error {
 	defer p.db.Unlock()
 	_, err := p.db.Conn().Exec(`
 		UPDATE accounts
-		SET disabled = 1, status = '禁用', invalid_at = ?, updated_at = CURRENT_TIMESTAMP
+		SET disabled = 1, status = 'disabled', invalid_at = ?, updated_at = CURRENT_TIMESTAMP
 		WHERE token_hash = ?`, float64(time.Now().Unix()), hash)
 	if err != nil {
 		return fmt.Errorf("mark account invalid: %w", err)
@@ -521,11 +521,11 @@ func normalizeAccount(account Account) Account {
 	account.Proxy = strings.TrimSpace(account.Proxy)
 	account.Status = strings.TrimSpace(account.Status)
 	if account.Status == "" {
-		account.Status = "正常"
+		account.Status = "active"
 	}
-	account.Disabled = account.Disabled || account.Status == "禁用"
+	account.Disabled = account.Disabled || account.Status == "disabled"
 	if account.Disabled {
-		account.Status = "禁用"
+		account.Status = "disabled"
 	}
 	if !account.Disabled {
 		account.InvalidAt = 0

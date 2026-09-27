@@ -537,8 +537,7 @@ func extractConversationTitle(body string) (string, bool) {
 
 func isPlaceholderConversationTitle(title string) bool {
 	switch strings.ToLower(strings.TrimSpace(title)) {
-	case "", "new chat", "new conversation", "untitled", "untitled conversation",
-		"新聊天", "新对话", "新会话", "未命名会话", "未命名对话":
+	case "", "new chat", "new conversation", "untitled", "untitled conversation":
 		return true
 	default:
 		return false
@@ -639,8 +638,8 @@ func buildSessionJSON(voice, voiceMode, languageCode string, upstream UpstreamCo
 		"voice":                         normalizeVoice(voice),
 		"voice_session_id":              sid,
 		"voice_status_request_id":       sid,
-		"timezone_offset_min":           -480,
-		"timezone":                      "Etc/GMT-8",
+		"timezone_offset_min":           -330,
+		"timezone":                      "Asia/Kolkata",
 		"voice_mode":                    voiceMode,
 		"model_slug":                    "",
 		"model_slug_advanced":           "",
@@ -667,7 +666,7 @@ func (s *Service) authHeaders(token string, extra map[string]string) http.Header
 	// Header set aligned with ChatGPT2API-GO UpstreamClient.headers (Edge 143 persona).
 	h := http.Header{}
 	h.Set("accept", "*/*")
-	h.Set("accept-language", "zh-CN,zh;q=0.9,en;q=0.8,en-US;q=0.7")
+	h.Set("accept-language", "en-US,en;q=0.9")
 	h.Set("cache-control", "no-cache")
 	h.Set("pragma", "no-cache")
 	h.Set("priority", "u=1, i")
@@ -688,7 +687,7 @@ func (s *Service) authHeaders(token string, extra map[string]string) http.Header
 	h.Set("sec-fetch-site", "same-origin")
 	h.Set("oai-device-id", s.cfg.DeviceID)
 	h.Set("oai-session-id", s.cfg.SessionID)
-	h.Set("oai-language", "zh-CN")
+	h.Set("oai-language", "en-US")
 	h.Set("oai-client-version", s.cfg.ClientVersion)
 	h.Set("oai-client-build-number", s.cfg.ClientBuildNumber)
 	h.Set("authorization", "Bearer "+token)

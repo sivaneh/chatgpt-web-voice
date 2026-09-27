@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -48,7 +48,7 @@
       <span class="brand-title" data-i18n="brandTitle">API 密钥</span>
     </a>
     <div class="top-actions">
-      <button type="button" class="header-chip" id="localeButton" title="语言" aria-label="语言">中文</button>
+      <button type="button" class="header-chip" id="localeButton" title="Language" aria-label="Language" style="display:none">EN</button>
       <button type="button" class="header-chip" id="themeButton" title="主题" aria-label="主题">浅色</button>
       <a class="nav-link" href="/accounts" data-i18n="accounts">账号池</a>
       <a class="nav-link active" href="/keys" aria-current="page" data-i18n="brandTitle">API 密钥</a>
@@ -132,10 +132,10 @@
       var keys = [];
       var stats = { total: 0, enabled: 0, disabled: 0 };
       var editingID = 0;
-      var locale = 'zh';
+      var locale = 'en';
       var theme = 'light';
       var toastTimer = 0;
-      var localeKey = 'chatgpt_web_voice_ui_locale_v1';
+      var localeKey = 'chatgpt_web_voice_ui_locale_v2';
       var themeKey = 'chatgpt_web_voice_theme_v1';
 
       var I18N = {
@@ -390,7 +390,7 @@
         finally { window.location.replace('/login'); }
       };
 
-      try { locale = localStorage.getItem(localeKey) === 'en' ? 'en' : 'zh'; } catch (e) {}
+      try { locale = localStorage.getItem(localeKey) === 'zh' ? 'zh' : 'en'; } catch (e) {}
       theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
       applyLocale();
       setTheme(theme);

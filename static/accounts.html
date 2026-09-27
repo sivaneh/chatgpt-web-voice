@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -52,7 +52,7 @@
     </a>
     <div id="toast" class="header-toast" role="status" aria-live="polite"></div>
     <div class="top-actions">
-      <button type="button" class="header-chip" id="btnUiLocale" data-i18n-title="localeAria" data-i18n-aria="localeAria" title="语言" aria-label="语言">中文</button>
+      <button type="button" class="header-chip" id="btnUiLocale" data-i18n-title="localeAria" data-i18n-aria="localeAria" title="Language" aria-label="Language" style="display:none">EN</button>
       <button type="button" class="header-chip" id="btnUiTheme" data-i18n-title="themeAria" data-i18n-aria="themeAria" title="主题" aria-label="主题">浅色</button>
       <a class="nav-link active" href="/accounts" aria-current="page" data-i18n="brandTitle">账号池</a>
       <a class="nav-link" href="/keys" data-i18n="apiKeys">API 密钥</a>
@@ -121,8 +121,8 @@
             <div class="field">
               <label for="statusInput" data-i18n="statusLabel">状态</label>
               <select id="statusInput">
-                <option value="正常" data-i18n="statusAvailable">正常</option>
-                <option value="禁用" data-i18n="statusDisabled">禁用</option>
+                <option value="active" data-i18n="statusAvailable">Active</option>
+                <option value="disabled" data-i18n="statusDisabled">Disabled</option>
               </select>
             </div>
           </div>
@@ -172,9 +172,9 @@
       var accounts = [];
       var stats = { total: 0, available: 0, disabled: 0 };
       var editingID = 0;
-      var localeKey = 'chatgpt_web_voice_ui_locale_v1';
+      var localeKey = 'chatgpt_web_voice_ui_locale_v2';
       var themeKey = 'chatgpt_web_voice_theme_v1';
-      var locale = 'zh';
+      var locale = 'en';
       var theme = 'light';
       var toastTimer = 0;
 
@@ -674,7 +674,7 @@
         editingID = editing ? account.id : 0;
         form.reset();
         emailInput.value = editing ? (account.email || '') : '';
-        statusInput.value = editing ? (account.available ? '正常' : '禁用') : '正常';
+        statusInput.value = editing ? (account.available ? 'active' : 'disabled') : 'active';
         accessTokenInput.required = !editing;
         resetClearActions();
         formMessage.textContent = '';
@@ -734,7 +734,7 @@
         var payload = {
           email: emailInput.value.trim(),
           status: statusInput.value,
-          disabled: statusInput.value === '禁用'
+          disabled: statusInput.value === 'disabled'
         };
         // access_token cannot be empty on the server; omit when blank to keep existing.
         if (accessToken) payload.access_token = accessToken;
@@ -768,7 +768,7 @@
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
               email: account.email,
-              status: enable ? '正常' : '禁用',
+              status: enable ? 'active' : 'disabled',
               disabled: !enable
             })
           });
@@ -896,7 +896,7 @@
         };
       }
 
-      try { locale = localStorage.getItem(localeKey) || 'zh'; } catch (_) {}
+      try { locale = localStorage.getItem(localeKey) || 'en'; } catch (_) {}
       try {
         var savedTheme = localStorage.getItem(themeKey);
         if (savedTheme === 'light' || savedTheme === 'dark') theme = savedTheme;

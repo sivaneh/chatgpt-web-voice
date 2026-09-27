@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,7 +26,7 @@
 </head>
 <body class="login-page">
   <div class="page-toggles">
-    <button type="button" id="btnUiLocale" title="语言" aria-label="语言">中文</button>
+    <button type="button" id="btnUiLocale" title="Language" aria-label="Language" style="display:none">EN</button>
     <button type="button" id="btnUiTheme" title="主题" aria-label="主题">浅色</button>
   </div>
   <main class="shell">
@@ -65,9 +65,9 @@
       var remember = document.getElementById('remember');
       var rememberLabel = document.getElementById('rememberLabel');
       var themeKey = 'chatgpt_web_voice_theme_v1';
-      var localeKey = 'chatgpt_web_voice_ui_locale_v1';
+      var localeKey = 'chatgpt_web_voice_ui_locale_v2';
       var theme = 'light';
-      var locale = 'zh';
+      var locale = 'en';
       var btnUiLocale = document.getElementById('btnUiLocale');
       var btnUiTheme = document.getElementById('btnUiTheme');
 

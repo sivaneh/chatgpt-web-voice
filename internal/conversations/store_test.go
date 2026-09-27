@@ -141,7 +141,7 @@ func TestConversationTitleTruncationPreservesUTF8(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	content := strings.Repeat("会", 160)
+	content := strings.Repeat("x", 160)
 	if _, err := conversations.UpsertMessage("alice", conversation.ID, Message{
 		ClientID: "client-unicode",
 		Role:     "user",

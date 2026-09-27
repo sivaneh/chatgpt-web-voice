@@ -175,7 +175,7 @@ func decodeAccountWriteRequest(w http.ResponseWriter, r *http.Request) (accountW
 	request.Email = strings.TrimSpace(request.Email)
 	request.Status = strings.TrimSpace(request.Status)
 	if request.Status == "" {
-		request.Status = "正常"
+		request.Status = "active"
 	}
 	if len(request.Email) > 320 {
 		return accountWriteRequest{}, fmt.Errorf("email is too long")
@@ -212,7 +212,7 @@ func pathAccountID(r *http.Request) (int64, error) {
 }
 
 func newAccountView(account accounts.Account) accountView {
-	available := !account.Disabled && account.Status != "禁用"
+	available := !account.Disabled && account.Status != "disabled"
 	view := accountView{
 		ID:                 account.ID,
 		Email:              account.Email,
@@ -257,7 +257,7 @@ func proxyPreview(raw string) string {
 	}
 	parsed, err := url.Parse(raw)
 	if err != nil || parsed.Host == "" {
-		return "已配置"
+		return "configured"
 	}
 	if parsed.Scheme == "" {
 		return parsed.Host

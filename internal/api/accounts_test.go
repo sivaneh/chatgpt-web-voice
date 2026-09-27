@@ -74,7 +74,7 @@ func TestAccountManagementAPI(t *testing.T) {
 		"email":        "admin@example.com",
 		"access_token": "secret-access-token-123456",
 		"proxy":        "http://user:password@127.0.0.1:8080",
-		"status":       "正常",
+		"status":       "active",
 		"disabled":     false,
 	})
 	if createResp.Code != http.StatusCreated {
@@ -108,7 +108,7 @@ func TestAccountManagementAPI(t *testing.T) {
 	updateResp := performJSONRequest(t, mux, http.MethodPut, "/api/accounts/"+jsonNumber(createBody.Account.ID), map[string]any{
 		"email":    "updated@example.com",
 		"proxy":    "",
-		"status":   "禁用",
+		"status":   "disabled",
 		"disabled": true,
 	})
 	if updateResp.Code != http.StatusOK {
@@ -134,7 +134,7 @@ func TestAccountManagementAPI(t *testing.T) {
 
 func TestAccountManagementAPIRejectsDuplicateToken(t *testing.T) {
 	_, mux := newAPITestServer(t)
-	payload := map[string]any{"access_token": "same-secret-token", "status": "正常"}
+	payload := map[string]any{"access_token": "same-secret-token", "status": "active"}
 	first := performJSONRequest(t, mux, http.MethodPost, "/api/accounts", payload)
 	if first.Code != http.StatusCreated {
 		t.Fatalf("first create failed: %d %s", first.Code, first.Body.String())
@@ -151,7 +151,7 @@ func TestAccountListIncludesJWTExpiry(t *testing.T) {
 	token := testJWT(map[string]any{"exp": exp, "sub": "user-1"})
 	createResp := performJSONRequest(t, mux, http.MethodPost, "/api/accounts", map[string]any{
 		"access_token": token,
-		"status":       "正常",
+		"status":       "active",
 	})
 	if createResp.Code != http.StatusCreated {
 		t.Fatalf("create status=%d body=%s", createResp.Code, createResp.Body.String())
